@@ -1,14 +1,30 @@
-import styled from '@emotion/styled';
+import * as Styled from './Input.styles';
 
-// const StyledImg = styled.img`
-// 	height: 200px;
-// `;
-
-export const Input = ({ labelText, placeholderText, onChange }) => {
+export const Input = ({
+	value,
+	inputId,
+	labelText,
+	placeholderText,
+	onChange,
+	type,
+	min,
+	minlength,
+	required,
+}) => {
 	return (
-		<>
-			<label>{labelText}</label>
-			<input placeholder={placeholderText} onChange={onChange} />
-		</>
+		<div>
+			<label htmlFor={inputId}>{labelText}</label>
+			<br />
+			<Styled.Input
+				value={value}
+				placeholder={placeholderText}
+				onChange={(e) => onChange(e)}
+				id={inputId}
+				type={type}
+				min={min}
+				minLength={minlength}
+				required={required}
+			/>
+		</div>
 	);
 };

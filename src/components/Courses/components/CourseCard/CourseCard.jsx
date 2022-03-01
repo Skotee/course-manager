@@ -1,11 +1,7 @@
-import styled from '@emotion/styled';
-import { Button } from '../../../../common/Button/Button';
+import { Typography } from '@mui/material';
 
-// const StyledButton = styled.button`
-// 	color: turquoise;
-// 	width: 200px;
-// 	height: 100px;
-// `;
+import { Button } from '../../../../common/Button/Button';
+import * as Styled from './CourseCard.styles';
 
 export const CourseCard = ({
 	title,
@@ -15,26 +11,27 @@ export const CourseCard = ({
 	authors,
 }) => {
 	return (
-		<>
-			<div>
-				<h2>{title}</h2>
-				<p>{description}</p>
-			</div>
-			<div>
-				<p>
-					<b>Authors</b>
-					{authors}
-				</p>
-				<p>
-					<b>Duration:</b>
+		<Styled.Wrapper>
+			<Styled.FirstSection>
+				<Styled.Title>{title}</Styled.Title>
+				<Typography>{description}</Typography>
+			</Styled.FirstSection>
+			<Styled.SecondSection>
+				<Typography>
+					<b>Authors: </b>
+					<Styled.AuthorsList>{authors}</Styled.AuthorsList>
+				</Typography>
+				<Typography>
+					<b>Duration: </b>
 					{duration} hours
-				</p>
-				<p>
-					<b>Created:</b>
+				</Typography>
+				<Typography>
+					<b>Created: </b>
 					{creationDate}
-				</p>
-				<Button>Show course</Button>
-			</div>
-		</>
+				</Typography>
+				<br />
+				<Button buttonText={'Show course'}></Button>
+			</Styled.SecondSection>
+		</Styled.Wrapper>
 	);
 };

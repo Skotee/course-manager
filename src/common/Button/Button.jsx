@@ -1,11 +1,9 @@
-import styled from '@emotion/styled';
+import * as Styled from './Button.styles';
 
-const StyledButton = styled.button`
-	color: turquoise;
-	width: 200px;
-	height: 100px;
-`;
-
-export const Button = ({ onClick, buttonText }) => {
-	return <StyledButton onClick={onClick}>{buttonText}</StyledButton>;
+export const Button = ({ disabled, onClick, buttonText }) => {
+	return (
+		<Styled.Button disabled={disabled} onClick={onClick}>
+			{buttonText}
+		</Styled.Button>
+	);
 };

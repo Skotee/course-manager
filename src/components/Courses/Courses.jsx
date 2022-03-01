@@ -1,24 +1,69 @@
-import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
+import { useState } from 'react';
+
 import { Button } from '../../common/Button/Button';
 import { CourseCard } from './components/CourseCard/CourseCard';
+import { ERRORS } from '../../constants';
+import { SearchBar } from './components/Searchbar/Searchbar';
+import { HorizontalWrapper } from '../../layout/wrappers/HorizontalWrapper.styles';
 
-import { mockedCoursesList, mockedAuthorsList } from '../../constants';
-import { Input } from '../../common/Input/Input';
+export const Courses = ({ authorsList, coursesList, onClick }) => {
+	const [searchedCourse, setSearchedCourse] = useState('');
+	const [courses, setCourses] = useState(coursesList);
+	// const [filteredCourses, setFilteredCourses] = useState();
 
-// const StyledImg = styled.img`
-// 	height: 200px;
-// `;
+	const getCourseAuthorsName = (authorsList, courseAuthorsIDs) => {
+		const authorsListArray = authorsList
+			.filter((author) => courseAuthorsIDs.includes(author.id))
+			.map((author) => author.name)
+			.join(', ');
+		return authorsListArray;
+	};
 
-export const Courses = (props) => {
-	const numbers = props.numbers;
-	const courseCard = mockedCoursesList.map((number) => (
-		<CourseCard key={number.toString()} value={number} />
-	));
+	const handleInputChange = (e) => {
+		setSearchedCourse(e.target.value);
+		e.target.value === '' && setCourses(coursesList);
+	};
+
+	const handleSearch = () => {
+		setCourses(filterCoursesBySearchName());
+	};
+
+	const filterCoursesBySearchName = () => {
+		const courseArr = coursesList.filter((course) => {
+			return (
+				course.title.toLowerCase().includes(searchedCourse.toLowerCase()) ||
+				course.id.toLowerCase().includes(searchedCourse.toLowerCase())
+			);
+		});
+		return courseArr;
+	};
+
 	return (
 		<>
-			<Input />
-			<CourseCard />
-			<Button> sds</Button>
+			{/* TODO sth is making error here, because of course length probably */}
+			<HorizontalWrapper>
+				<SearchBar
+					value={searchedCourse}
+					onChange={handleInputChange}
+					onClick={handleSearch}
+				/>
+				<Button onClick={onClick} buttonText={'Add new course'}></Button>
+			</HorizontalWrapper>
+			{courses.length ? (
+				courses.map((course) => (
+					<CourseCard
+						key={course.id}
+						title={course.title}
+						duration={course.duration}
+						creationDate={course.creationDate}
+						description={course.description}
+						authors={getCourseAuthorsName(authorsList, course.authors)}
+					/>
+				))
+			) : (
+				<Typography>{ERRORS.noSuchCourse}</Typography>
+			)}
 		</>
 	);
 };

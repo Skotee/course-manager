@@ -1,18 +1,20 @@
-import styled from '@emotion/styled';
+import * as Styled from './Header.styles';
 import { Button } from '../../common/Button/Button';
-
 import { Logo } from './components/Logo/Logo';
-
-// const StyledImg = styled.img`
-// 	height: 200px;
-// `;
 
 export const Header = () => {
 	return (
 		<>
 			<Logo />
-			<p>Robert</p>
-			<Button>LOG OUT</Button>
+			<Styled.RightSection>
+				<Styled.UserName>Robert</Styled.UserName>
+				<Button
+					buttonText={'LOG OUT'}
+					onClick={() => {
+						alert('You have successfully logged out.');
+					}}
+				></Button>
+			</Styled.RightSection>
 		</>
 	);
 };
