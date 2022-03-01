@@ -52,3 +52,50 @@ export const colorTheme = {
 export const ERRORS = {
 	noSuchCourse: "Such courses don't exist",
 };
+
+export const BUTTONS_TEXTS = {
+	showCourse: 'Show course',
+	search: 'Search',
+	addNewCourse: 'Add new course',
+	createCourse: 'Create course',
+	createAuthor: 'Create author',
+	addAuthor: 'Add author',
+	deleteAuthor: 'Delete author',
+	logOut: 'LOG OUT',
+};
+
+export const ALERTS = {
+	followInstructions: 'Follow the instructions to submit successfuly form',
+	fillInputs:
+		'Make sure to fill in title, description and duration of the course',
+	descriptionInfo: 'Description text length should be at least 2 characters',
+	atLeastAuthor: 'Please, add at least one author',
+	noAuthors: `There's no authors`,
+	noAuthorsChosen: `There's no authors chosen for this course`,
+	logOut: 'You have successfully logged out.',
+};
+
+export const PLACEHOLDERS = {
+	enterTitle: 'Enter title...',
+	enterAuthorName: 'Enter author name...',
+	enterDescription: 'Enter description',
+	enterDuration: 'Enter duration in minutes...',
+	enterCourse: 'Enter course name...',
+};
+
+export const LABELS = {
+	authorName: 'Author name',
+	description: 'Description',
+	title: 'Title',
+	duration: 'Duration',
+	searchBy: 'Search by title or by id',
+};
+
+export const HEADERS = {
+	addAuthor: 'Add author',
+	authors: 'Authors',
+	duration: 'Duration',
+	courseAuthors: 'Course authors',
+};
+
+export const USERNAME = 'Robert';

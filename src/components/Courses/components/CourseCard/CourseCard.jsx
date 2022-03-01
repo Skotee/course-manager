@@ -1,6 +1,8 @@
 import { Typography } from '@mui/material';
 
 import { Button } from '../../../../common/Button/Button';
+import { BUTTONS_TEXTS } from '../../../../constants';
+
 import * as Styled from './CourseCard.styles';
 
 export const CourseCard = ({
@@ -30,7 +32,7 @@ export const CourseCard = ({
 					{creationDate}
 				</Typography>
 				<br />
-				<Button buttonText={'Show course'}></Button>
+				<Button buttonText={BUTTONS_TEXTS.showCourse}></Button>
 			</Styled.SecondSection>
 		</Styled.Wrapper>
 	);
