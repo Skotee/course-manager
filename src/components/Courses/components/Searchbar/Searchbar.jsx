@@ -1,5 +1,6 @@
 import { Input } from '../../../../common/Input/Input';
 import { Button } from '../../../../common/Button/Button';
+import { BUTTONS_TEXTS, LABELS, PLACEHOLDERS } from '../../../../constants';
 
 import * as Styled from './Searchbar.styles';
 
@@ -7,8 +8,8 @@ export const SearchBar = ({ onClick, value, onChange }) => {
 	return (
 		<Styled.Form>
 			<Input
-				labelText={'Search by title or by id'}
-				placeholderText={'Enter course name...'}
+				labelText={LABELS.searchBy}
+				placeholderText={PLACEHOLDERS.enterCourse}
 				onChange={onChange}
 				inputId='search'
 				value={value}
@@ -16,7 +17,7 @@ export const SearchBar = ({ onClick, value, onChange }) => {
 			<Button
 				disabled={!value}
 				type={'button'}
-				buttonText={'Search'}
+				buttonText={BUTTONS_TEXTS.search}
 				onClick={(e) => {
 					e.preventDefault();
 					onClick();

@@ -3,14 +3,13 @@ import { useState } from 'react';
 
 import { Button } from '../../common/Button/Button';
 import { CourseCard } from './components/CourseCard/CourseCard';
-import { ERRORS } from '../../constants';
+import { BUTTONS_TEXTS, ERRORS } from '../../constants';
 import { SearchBar } from './components/Searchbar/Searchbar';
 import { HorizontalWrapper } from '../../layout/wrappers/HorizontalWrapper.styles';
 
 export const Courses = ({ authorsList, coursesList, onClick }) => {
 	const [searchedCourse, setSearchedCourse] = useState('');
 	const [courses, setCourses] = useState(coursesList);
-	// const [filteredCourses, setFilteredCourses] = useState();
 
 	const getCourseAuthorsName = (authorsList, courseAuthorsIDs) => {
 		const authorsListArray = authorsList
@@ -41,14 +40,16 @@ export const Courses = ({ authorsList, coursesList, onClick }) => {
 
 	return (
 		<>
-			{/* TODO sth is making error here, because of course length probably */}
 			<HorizontalWrapper>
 				<SearchBar
 					value={searchedCourse}
 					onChange={handleInputChange}
 					onClick={handleSearch}
 				/>
-				<Button onClick={onClick} buttonText={'Add new course'}></Button>
+				<Button
+					onClick={onClick}
+					buttonText={BUTTONS_TEXTS.addNewCourse}
+				></Button>
 			</HorizontalWrapper>
 			{courses.length ? (
 				courses.map((course) => (

@@ -5,6 +5,13 @@ import { Typography } from '@mui/material';
 import { Button } from '../../common/Button/Button';
 import { Input } from '../../common/Input/Input';
 import { pipeDuration, dateGenerator } from '../../helpers';
+import {
+	ALERTS,
+	BUTTONS_TEXTS,
+	HEADERS,
+	LABELS,
+	PLACEHOLDERS,
+} from '../../constants';
 
 import * as Styled from './CreateCourse.styles';
 
@@ -52,7 +59,7 @@ export const CreateCourse = ({
 
 	const createNewCourse = () => {
 		if (!checkForErrors()) {
-			alert('Follow the instructions to submit successfuly form');
+			alert(ALERTS.followInstructions);
 		} else {
 			const newCourse = {
 				id: uuidv4(),
@@ -74,15 +81,13 @@ export const CreateCourse = ({
 
 	const checkForErrors = () => {
 		if (title === '' || description === '' || duration === '') {
-			alert(
-				'Make sure to fill in title, description and duration of the course'
-			);
+			alert(ALERTS.fillInputs);
 			return false;
 		} else if (description.length < 2) {
-			alert('Description text length should be at least 2 characters');
+			alert(ALERTS.descriptionInfo);
 			return false;
 		} else if (courseAuthors.length === 0) {
-			alert('Please, add at least one author');
+			alert(ALERTS.atLeastAuthor);
 			return false;
 		} else return true;
 	};
@@ -93,23 +98,23 @@ export const CreateCourse = ({
 				<div>
 					<Styled.TwoColumnsContainer>
 						<Input
-							placeholderText={'Enter title...'}
-							labelText={'Title'}
+							placeholderText={PLACEHOLDERS.enterTitle}
+							labelText={LABELS.title}
 							type='text'
 							onChange={(e) => setTitle(e.target.value)}
 							required
 						/>
 						<Button
-							buttonText={'Create course'}
+							buttonText={BUTTONS_TEXTS.createCourse}
 							onClick={createNewCourse}
 							type='submit'
 						/>
 					</Styled.TwoColumnsContainer>
-					<label htmlFor={'textarea'}>Description</label>
+					<label htmlFor={'textarea'}>{LABELS.description}</label>
 					<br />
 					<Styled.Textarea
 						id={'textarea'}
-						placeholder='Enter description'
+						placeholder={PLACEHOLDERS.enterDescription}
 						onChange={(e) => setDescription(e.target.value)}
 						required
 					/>
@@ -118,10 +123,10 @@ export const CreateCourse = ({
 				<Styled.AddAuthorContainer>
 					<Styled.CenterContainer>
 						{/* add author section */}
-						<Styled.SectionHeader>Add author</Styled.SectionHeader>
+						<Styled.SectionHeader>{HEADERS.addAuthor}</Styled.SectionHeader>
 						<Input
-							labelText={'Author name'}
-							placeholderText={'Enter author name...'}
+							labelText={LABELS.authorName}
+							placeholderText={PLACEHOLDERS.enterAuthorName}
 							value={addAuthorInput}
 							onChange={(e) => setAddAuthorInput(e.target.value)}
 							inputId='search'
@@ -131,12 +136,12 @@ export const CreateCourse = ({
 						<br />
 						<Button
 							disabled={!addAuthorInput}
-							buttonText={'Create author'}
+							buttonText={BUTTONS_TEXTS.createAuthor}
 							onClick={handleCreateNewAuthor}
 						/>
 					</Styled.CenterContainer>
 					<div>
-						<Styled.SectionHeader>Authors</Styled.SectionHeader>
+						<Styled.SectionHeader>{HEADERS.authors}</Styled.SectionHeader>
 						<ul>
 							{/*  authors list  section */}
 							{availableAuthors.length ? (
@@ -145,7 +150,7 @@ export const CreateCourse = ({
 										<Styled.ListItem key={author.id}>
 											<Styled.AuthorName>{author.name}</Styled.AuthorName>
 											<Button
-												buttonText={'Add author'}
+												buttonText={BUTTONS_TEXTS.addAuthor}
 												onClick={() =>
 													handleAddAuthorToNewCourse(author.id, author.name)
 												}
@@ -154,16 +159,16 @@ export const CreateCourse = ({
 									);
 								})
 							) : (
-								<Typography>There's no authors</Typography>
+								<Typography>{ALERTS.noAuthors}</Typography>
 							)}
 						</ul>
 					</div>
 					<div>
 						{/* duration section */}
-						<Styled.SectionHeader>Duration</Styled.SectionHeader>
+						<Styled.SectionHeader>{HEADERS.duration}</Styled.SectionHeader>
 						<Input
-							labelText={'Duration'}
-							placeholderText={'Enter duration in minutes...'}
+							labelText={LABELS.duration}
+							placeholderText={PLACEHOLDERS.enterDuration}
 							inputId='duration'
 							minlength='1'
 							type='number'
@@ -179,7 +184,7 @@ export const CreateCourse = ({
 					</div>
 					<div>
 						{/*  Course authors list section */}
-						<Styled.SectionHeader>Course authors</Styled.SectionHeader>
+						<Styled.SectionHeader>{HEADERS.courseAuthors}</Styled.SectionHeader>
 						<ul>
 							{courseAuthors.length ? (
 								courseAuthors.map((author) => {
@@ -187,7 +192,7 @@ export const CreateCourse = ({
 										<Styled.ListItem key={author.id}>
 											<Styled.AuthorName>{author.name}</Styled.AuthorName>
 											<Button
-												buttonText={'Delete author'}
+												buttonText={BUTTONS_TEXTS.deleteAuthor}
 												onClick={() =>
 													handleDeleteAuthorFromCourse(author.id, author.name)
 												}
@@ -196,9 +201,7 @@ export const CreateCourse = ({
 									);
 								})
 							) : (
-								<Typography>
-									There's no authors chosen for this course
-								</Typography>
+								<Typography>{ALERTS.noAuthorsChosen}</Typography>
 							)}
 						</ul>
 					</div>
