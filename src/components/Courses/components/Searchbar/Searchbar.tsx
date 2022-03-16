@@ -1,10 +1,22 @@
+import { MouseEventHandler, SetStateAction } from 'react';
+
 import { Input } from '../../../../common/Input/Input';
 import { Button } from '../../../../common/Button/Button';
 import { BUTTONS_TEXTS, LABELS, PLACEHOLDERS } from '../../../../constants';
 
 import * as Styled from './Searchbar.styles';
 
-export const SearchBar = ({ onClick, value, onChange }) => {
+interface SearchBarProps {
+	onClick: MouseEventHandler<HTMLButtonElement>;
+	value: string;
+	onChange: (e: { target: { value: SetStateAction<string> } }) => void;
+}
+
+export const SearchBar = ({
+	onClick,
+	value,
+	onChange,
+}: SearchBarProps): JSX.Element => {
 	return (
 		<Styled.Form>
 			<Input
@@ -18,9 +30,9 @@ export const SearchBar = ({ onClick, value, onChange }) => {
 				disabled={!value}
 				type={'button'}
 				buttonText={BUTTONS_TEXTS.search}
-				onClick={(e) => {
+				onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 					e.preventDefault();
-					onClick();
+					onClick(e);
 				}}
 			></Button>
 		</Styled.Form>
