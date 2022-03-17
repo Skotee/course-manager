@@ -62,6 +62,9 @@ export const BUTTONS_TEXTS = {
 	addAuthor: 'Add author',
 	deleteAuthor: 'Delete author',
 	logOut: 'LOG OUT',
+	registration: 'REGISTRATION',
+	login: 'LOGIN',
+	backToCourses: 'Back to courses',
 };
 
 export const ALERTS = {
@@ -72,7 +75,7 @@ export const ALERTS = {
 	atLeastAuthor: 'Please, add at least one author',
 	noAuthors: `There's no authors`,
 	noAuthorsChosen: `There's no authors chosen for this course`,
-	logOut: 'You have successfully logged out.',
+	// logOut: 'You have successfully logged out.',
 };
 
 export const PLACEHOLDERS = {
@@ -81,6 +84,9 @@ export const PLACEHOLDERS = {
 	enterDescription: 'Enter description',
 	enterDuration: 'Enter duration in minutes...',
 	enterCourse: 'Enter course name...',
+	enterName: 'Enter name',
+	enterEmail: 'Enter email',
+	enterPassword: 'Enter password',
 };
 
 export const LABELS = {
@@ -89,6 +95,9 @@ export const LABELS = {
 	title: 'Title',
 	duration: 'Duration',
 	searchBy: 'Search by title or by id',
+	name: 'Name',
+	email: 'Email',
+	password: 'Password',
 };
 
 export const HEADERS = {

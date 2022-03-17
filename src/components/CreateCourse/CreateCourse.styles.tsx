@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 
 export const Textarea = styled.textarea`
-	// height: 70px;
 	max-height: 150px;
 	min-height: 60px;
 	width: 100%;

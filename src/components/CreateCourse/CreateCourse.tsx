@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 
 import { Button } from '../../common/Button/Button';
@@ -15,43 +16,47 @@ import {
 
 import * as Styled from './CreateCourse.styles';
 
+interface CreateCourseProps {
+	authorsList: any;
+	setAuthorsList: any;
+	setCourses: any;
+}
+
 export const CreateCourse = ({
 	authorsList,
 	setAuthorsList,
 	setCourses,
-	setIsCreatingCourse,
-}) => {
+}: CreateCourseProps): JSX.Element => {
 	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
-	const [courseAuthors, setCourseAuthors] = useState([]);
+	const [courseAuthors, setCourseAuthors] = useState([] as any[]);
 	const [addAuthorInput, setAddAuthorInput] = useState('');
 	const [customAuthor, setCustomAuthor] = useState({});
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
+	let navigate = useNavigate();
 
-	const handleCreateNewAuthor = (e) => {
+	const handleCreateNewAuthor = (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 		const newAuthor = {
 			id: uuidv4(),
 			name: addAuthorInput,
 		};
-		setCustomAuthor({
-			id: newAuthor.id,
-			name: newAuthor.name,
-		});
-
+		setCustomAuthor(newAuthor);
 		setAvailableAuthors([...availableAuthors, newAuthor]);
 	};
 
-	const handleAddAuthorToNewCourse = (authorID, authorName) => {
+	const handleAddAuthorToNewCourse = (authorID: number, authorName: string) => {
 		const newCourseAuthor = { name: authorName, id: authorID };
 		setAvailableAuthors(
-			availableAuthors.filter((author) => author.id !== authorID)
+			availableAuthors.filter(
+				(author: { id: number }) => author.id !== authorID
+			)
 		);
 		setCourseAuthors([...courseAuthors, newCourseAuthor]);
 	};
 
-	const handleDeleteAuthorFromCourse = (authorID, authorName) => {
+	const handleDeleteAuthorFromCourse = (authorID: any, authorName: any) => {
 		const courseAuthorToDelete = { name: authorName, id: authorID };
 		setAvailableAuthors([...availableAuthors, courseAuthorToDelete]);
 		setCourseAuthors(courseAuthors.filter((author) => author.id !== authorID));
@@ -69,18 +74,18 @@ export const CreateCourse = ({
 				duration: duration,
 				authors: courseAuthors.map((author) => author.id),
 			};
-			setCourses((prevCourse) => {
+			setCourses((prevCourse: any) => {
 				return [...prevCourse, newCourse];
 			});
-			setAuthorsList((prevAuthorsList) => {
+			setAuthorsList((prevAuthorsList: any) => {
 				return [...prevAuthorsList, customAuthor];
 			});
-			setIsCreatingCourse(false);
+			navigate('/courses', { replace: true });
 		}
 	};
 
 	const checkForErrors = () => {
-		if (title === '' || description === '' || duration === '') {
+		if (title === '' || description === '' || duration === 0) {
 			alert(ALERTS.fillInputs);
 			return false;
 		} else if (description.length < 2) {
@@ -101,7 +106,9 @@ export const CreateCourse = ({
 							placeholderText={PLACEHOLDERS.enterTitle}
 							labelText={LABELS.title}
 							type='text'
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={(e: {
+								target: { value: React.SetStateAction<string> };
+							}) => setTitle(e.target.value)}
 							required
 						/>
 						<Button
@@ -128,9 +135,11 @@ export const CreateCourse = ({
 							labelText={LABELS.authorName}
 							placeholderText={PLACEHOLDERS.enterAuthorName}
 							value={addAuthorInput}
-							onChange={(e) => setAddAuthorInput(e.target.value)}
+							onChange={(e: {
+								target: { value: React.SetStateAction<string> };
+							}) => setAddAuthorInput(e.target.value)}
 							inputId='search'
-							minlength='2'
+							minlength={2}
 							type='text'
 						/>
 						<br />
@@ -145,7 +154,7 @@ export const CreateCourse = ({
 						<ul>
 							{/*  authors list  section */}
 							{availableAuthors.length ? (
-								availableAuthors.map((author) => {
+								availableAuthors.map((author: { id: number; name: string }) => {
 									return (
 										<Styled.ListItem key={author.id}>
 											<Styled.AuthorName>{author.name}</Styled.AuthorName>
@@ -170,10 +179,12 @@ export const CreateCourse = ({
 							labelText={LABELS.duration}
 							placeholderText={PLACEHOLDERS.enterDuration}
 							inputId='duration'
-							minlength='1'
+							minlength={1}
 							type='number'
-							min='1'
-							onChange={(e) => setDuration(e.target.value)}
+							min={1}
+							onChange={(e: {
+								target: { value: React.SetStateAction<number> };
+							}) => setDuration(e.target.value)}
 							required
 						/>
 						<br />

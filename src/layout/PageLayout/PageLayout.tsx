@@ -1,13 +1,15 @@
 import * as Styled from './PageLayout.styles';
 
-export const PageContainer = ({ children }) => {
+const PageContainer: React.FC = ({ children }) => {
 	return <Styled.PageContainer>{children}</Styled.PageContainer>;
 };
 
-export const HeaderContainer = ({ children }) => {
+const HeaderContainer: React.FC = ({ children }) => {
 	return <Styled.HeaderContainer>{children}</Styled.HeaderContainer>;
 };
 
-export const ContentContainer = ({ children }) => {
+const ContentContainer: React.FC = ({ children }) => {
 	return <Styled.ContentContainer>{children}</Styled.ContentContainer>;
 };
+
+export { PageContainer, HeaderContainer, ContentContainer };

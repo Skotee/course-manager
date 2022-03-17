@@ -1,6 +1,20 @@
+import React from 'react';
+
 import * as Styled from './Input.styles';
 
-export const Input = ({
+interface InputProps {
+	value?: string;
+	inputId?: string;
+	labelText: string;
+	placeholderText: string;
+	onChange?: any;
+	type?: string;
+	min?: number;
+	minlength?: number;
+	required?: boolean;
+}
+
+export const Input: React.FC<InputProps> = ({
 	value,
 	inputId,
 	labelText,
