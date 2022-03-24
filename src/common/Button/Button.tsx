@@ -5,7 +5,7 @@ import * as Styled from './Button.styles';
 interface ButtonProps {
 	disabled?: boolean;
 	onClick?: MouseEventHandler<HTMLButtonElement>;
-	buttonText: string;
+	buttonText?: string;
 	type?: string;
 }
 

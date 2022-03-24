@@ -8,7 +8,7 @@ const StyledImg = styled.img`
 `;
 
 export const Logo = () => {
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 
 	return (
 		<StyledImg

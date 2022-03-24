@@ -1,4 +1,5 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 
@@ -8,15 +9,21 @@ import { CourseCard } from './components/CourseCard/CourseCard';
 import { BUTTONS_TEXTS, ERRORS } from '../../constants';
 import { SearchBar } from './components/Searchbar/Searchbar';
 import { HorizontalWrapper } from '../../layout/wrappers/HorizontalWrapper.styles';
+import { getAuthorsList, getCoursesList } from '../../selectors';
+import { getAllCoursesAction } from '../../store/courses/actionCreators';
 
-interface CoursesProps {
-	coursesList: any;
-}
-
-export const Courses = ({ coursesList }: CoursesProps): JSX.Element => {
+export const Courses = (): JSX.Element => {
+	const coursesList = useSelector(getCoursesList);
+	const authorsList = useSelector(getAuthorsList);
+	console.log('coursesList', coursesList);
+	console.log('authorsList', coursesList);
 	const [searchedCourse, setSearchedCourse] = useState('');
 	const [courses, setCourses] = useState(coursesList);
-	let navigate = useNavigate();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		getAllCoursesAction();
+	}, []);
 
 	const handleInputChange = (e: {
 		target: { value: SetStateAction<string> };
@@ -63,7 +70,7 @@ export const Courses = ({ coursesList }: CoursesProps): JSX.Element => {
 						duration={course.duration}
 						creationDate={course.creationDate}
 						description={course.description}
-						authors={getCourseAuthorsName(course.authors)}
+						authors={getCourseAuthorsName(course.authors, authorsList)}
 					/>
 				))
 			) : (

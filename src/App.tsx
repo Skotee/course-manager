@@ -6,7 +6,6 @@ import Registration from './components/Courses/components/Registration/Registrat
 import { Courses } from './components/Courses/Courses';
 import { CreateCourse } from './components/CreateCourse/CreateCourse';
 import { Header } from './components/Header/Header';
-import { mockedAuthorsList, mockedCoursesList } from './constants';
 import {
 	PageContainer,
 	HeaderContainer,
@@ -15,8 +14,6 @@ import {
 import CourseInfo from './components/Courses/components/CourseInfo';
 
 function App() {
-	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
-	const [coursesList, setCoursesList] = useState(mockedCoursesList);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
@@ -67,11 +64,7 @@ function App() {
 								<Header />
 							</HeaderContainer>
 							<ContentContainer>
-								<CreateCourse
-									authorsList={authorsList}
-									setAuthorsList={setAuthorsList}
-									setCourses={setCoursesList}
-								/>
+								<CreateCourse />
 							</ContentContainer>
 						</PageContainer>
 					}
@@ -84,7 +77,7 @@ function App() {
 								<Header />
 							</HeaderContainer>
 							<ContentContainer>
-								<Courses coursesList={coursesList} />
+								<Courses />
 							</ContentContainer>
 						</PageContainer>
 					}

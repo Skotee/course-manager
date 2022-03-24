@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
@@ -13,28 +14,22 @@ import {
 	LABELS,
 	PLACEHOLDERS,
 } from '../../constants';
+import { getAuthorsList } from '../../selectors';
+import { addAuthor } from '../../store/authors/actionCreators';
+import { addCourse } from '../../store/courses/actionCreators';
 
 import * as Styled from './CreateCourse.styles';
 
-interface CreateCourseProps {
-	authorsList: any;
-	setAuthorsList: any;
-	setCourses: any;
-}
-
-export const CreateCourse = ({
-	authorsList,
-	setAuthorsList,
-	setCourses,
-}: CreateCourseProps): JSX.Element => {
+export const CreateCourse = (): JSX.Element => {
+	const authorsList = useSelector(getAuthorsList);
 	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
 	const [courseAuthors, setCourseAuthors] = useState([] as any[]);
 	const [addAuthorInput, setAddAuthorInput] = useState('');
-	const [customAuthor, setCustomAuthor] = useState({});
 	const [duration, setDuration] = useState(0);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
-	let navigate = useNavigate();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleCreateNewAuthor = (e: { preventDefault: () => void }) => {
 		e.preventDefault();
@@ -42,8 +37,8 @@ export const CreateCourse = ({
 			id: uuidv4(),
 			name: addAuthorInput,
 		};
-		setCustomAuthor(newAuthor);
 		setAvailableAuthors([...availableAuthors, newAuthor]);
+		dispatch(addAuthor(newAuthor));
 	};
 
 	const handleAddAuthorToNewCourse = (authorID: number, authorName: string) => {
@@ -74,12 +69,7 @@ export const CreateCourse = ({
 				duration: duration,
 				authors: courseAuthors.map((author) => author.id),
 			};
-			setCourses((prevCourse: any) => {
-				return [...prevCourse, newCourse];
-			});
-			setAuthorsList((prevAuthorsList: any) => {
-				return [...prevAuthorsList, customAuthor];
-			});
+			dispatch(addCourse(newCourse));
 			navigate('/courses', { replace: true });
 		}
 	};
