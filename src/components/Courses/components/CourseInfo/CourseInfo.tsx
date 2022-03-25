@@ -1,19 +1,22 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 
 import { getCourseAuthorsName } from '../../../../helpers/getCoursesAuthorsName';
 import { Button } from '../../../../common/Button/Button';
 import { BUTTONS_TEXTS } from '../../../../constants';
-import { mockedCoursesList } from '../../../../constants';
+import { getAuthorsList, getCoursesList } from '../../../../selectors';
 
 import * as Styled from './CourseInfo.styles';
 
 export const CourseInfo: React.FC = () => {
 	const { courseId } = useParams();
-	let navigate = useNavigate();
+	const navigate = useNavigate();
+	const authorsList = useSelector(getAuthorsList);
+	const coursesList = useSelector(getCoursesList);
 
-	const selectedCourse = mockedCoursesList.find(
-		(course) => course.id === courseId
+	const selectedCourse = coursesList.find(
+		(course: { id: string | undefined }) => course.id === courseId
 	);
 
 	return (
@@ -43,7 +46,7 @@ export const CourseInfo: React.FC = () => {
 					<Typography>
 						<b>Authors: </b>
 						<Styled.AuthorsList>
-							{getCourseAuthorsName(selectedCourse?.authors)}
+							{getCourseAuthorsName(selectedCourse?.authors, authorsList)}
 						</Styled.AuthorsList>
 					</Typography>
 				</Styled.SecondSection>

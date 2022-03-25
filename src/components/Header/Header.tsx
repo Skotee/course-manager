@@ -7,7 +7,7 @@ import { BUTTONS_TEXTS, USERNAME } from '../../constants';
 import * as Styled from './Header.styles';
 
 export const Header = () => {
-	let navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const handleSubmit = () => {
 		localStorage.removeItem('loginToken');

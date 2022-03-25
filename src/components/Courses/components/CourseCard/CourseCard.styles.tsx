@@ -10,6 +10,10 @@ export const Wrapper = styled.div`
 	margin-bottom: 50px;
 	padding: 20px;
 `;
+export const ButtonContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
 
 export const FirstSection = styled.div`
 	width: 70%;
