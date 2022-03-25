@@ -10,9 +10,7 @@ export const getAllCoursesApi = () => {
 	axios
 		.get('http://localhost:3000/courses/all')
 		.then((response) => console.log('sds', response.data.result))
-		.then((response) =>
-			console.log('dispatch', dispatch(getAllCourses(response)))
-		)
+		.then((response) => dispatch(getAllCourses(response)))
 		.catch((err) => console.warn(err));
 };
 

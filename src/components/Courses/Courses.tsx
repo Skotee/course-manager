@@ -10,7 +10,7 @@ import { BUTTONS_TEXTS, ERRORS } from '../../constants';
 import { SearchBar } from './components/Searchbar/Searchbar';
 import { HorizontalWrapper } from '../../layout/wrappers/HorizontalWrapper.styles';
 import { getAuthorsList, getCoursesList } from '../../selectors';
-import { getAllCoursesAction } from '../../store/courses/actionCreators';
+import { getAllCoursesApi } from '../../services';
 
 export const Courses = (): JSX.Element => {
 	const coursesList = useSelector(getCoursesList);
@@ -22,7 +22,7 @@ export const Courses = (): JSX.Element => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		getAllCoursesAction();
+		getAllCoursesApi();
 	}, []);
 
 	const handleInputChange = (e: {
@@ -61,7 +61,7 @@ export const Courses = (): JSX.Element => {
 					buttonText={BUTTONS_TEXTS.addNewCourse}
 				></Button>
 			</HorizontalWrapper>
-			{courses.length ? (
+			{courses?.length ? (
 				courses.map((course: any) => (
 					<CourseCard
 						key={course.id}

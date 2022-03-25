@@ -2,7 +2,7 @@ import { getAllCoursesApi } from '../../services';
 import * as actions from './actionTypes';
 
 export function getAllCoursesAction() {
-	return (dispatch: (arg0: any) => void) => {
+	return (dispatch: any) => {
 		const coursesResult = getAllCoursesApi();
 		console.log('coursesResult', coursesResult);
 		dispatch(getAllCourses(coursesResult));

@@ -22,14 +22,13 @@ export default function coursesReducer(
 	action: { payload: any; type?: any }
 ) {
 	const { type, payload } = action;
-	console.log('payload', payload);
 
 	switch (type) {
 		case GET_ALL_COURSES:
-			return {
-				...state,
-				payload,
-			};
+			console.log('state reducer', state);
+			console.log('payload reducer', payload);
+
+			return [...state];
 
 		case ADD_COURSE:
 			if (Array.isArray(payload)) {
