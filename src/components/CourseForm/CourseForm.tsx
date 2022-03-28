@@ -18,9 +18,9 @@ import { getAuthorsList } from '../../selectors';
 import { addAuthor } from '../../store/authors/actionCreators';
 import { addCourse } from '../../store/courses/actionCreators';
 
-import * as Styled from './CreateCourse.styles';
+import * as Styled from './CourseForm.styles';
 
-export const CreateCourse = (): JSX.Element => {
+export const CourseForm = (): JSX.Element => {
 	const authorsList = useSelector(getAuthorsList);
 	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
 	const [courseAuthors, setCourseAuthors] = useState([] as any[]);
