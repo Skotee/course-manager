@@ -143,7 +143,7 @@ export const CreateCourse = (): JSX.Element => {
 						<Styled.SectionHeader>{HEADERS.authors}</Styled.SectionHeader>
 						<ul>
 							{/*  authors list  section */}
-							{availableAuthors.length ? (
+							{availableAuthors?.length ? (
 								availableAuthors.map((author: { id: number; name: string }) => {
 									return (
 										<Styled.ListItem key={author.id}>
