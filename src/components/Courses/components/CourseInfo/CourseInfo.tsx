@@ -5,19 +5,19 @@ import { Typography } from '@mui/material';
 import { getCourseAuthorsName } from '../../../../helpers/getCoursesAuthorsName';
 import { Button } from '../../../../common/Button/Button';
 import { BUTTONS_TEXTS } from '../../../../constants';
-import { getAuthorsList, getCoursesList } from '../../../../selectors';
+import { selectAuthors, searchCoursesById } from '../../../../selectors';
 
 import * as Styled from './CourseInfo.styles';
 
 export const CourseInfo: React.FC = () => {
 	const { courseId } = useParams();
 	const navigate = useNavigate();
-	const authorsList = useSelector(getAuthorsList);
-	const coursesList = useSelector(getCoursesList);
+	const authorsList = useSelector(selectAuthors);
+	const coursesList = useSelector(searchCoursesById(courseId));
 
-	const selectedCourse = coursesList.find(
-		(course: { id: string | undefined }) => course.id === courseId
-	);
+	const courseAuthors = coursesList.authors.map((id: any) => {
+		return authorsList.find((author: { id: any }) => author.id === id)?.name;
+	});
 
 	return (
 		<Styled.Wrapper>
@@ -26,28 +26,26 @@ export const CourseInfo: React.FC = () => {
 				buttonText={BUTTONS_TEXTS.backToCourses}
 			/>
 			<Styled.Content>
-				<Styled.Title>{selectedCourse?.title}</Styled.Title>
+				<Styled.Title>{courseAuthors?.title}</Styled.Title>
 				<Styled.FirstSection>
-					<Typography>{selectedCourse?.description}</Typography>
+					<Typography>{courseAuthors?.description}</Typography>
 				</Styled.FirstSection>
 				<Styled.SecondSection>
 					<Typography>
 						<b>ID: </b>
-						{selectedCourse?.id}
+						{courseAuthors?.id}
 					</Typography>
 					<Typography>
 						<b>Duration: </b>
-						{selectedCourse?.duration} hours
+						{courseAuthors?.duration} hours
 					</Typography>
 					<Typography>
 						<b>Created: </b>
-						{selectedCourse?.creationDate}
+						{courseAuthors?.creationDate}
 					</Typography>
 					<Typography>
 						<b>Authors: </b>
-						<Styled.AuthorsList>
-							{getCourseAuthorsName(selectedCourse?.authors, authorsList)}
-						</Styled.AuthorsList>
+						<Styled.AuthorsList>{courseAuthors.join(', ')}</Styled.AuthorsList>
 					</Typography>
 				</Styled.SecondSection>
 			</Styled.Content>

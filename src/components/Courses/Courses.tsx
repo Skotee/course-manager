@@ -9,21 +9,25 @@ import { CourseCard } from './components/CourseCard/CourseCard';
 import { BUTTONS_TEXTS, ERRORS } from '../../constants';
 import { SearchBar } from './components/Searchbar/Searchbar';
 import { HorizontalWrapper } from '../../layout/wrappers/HorizontalWrapper.styles';
-import { getAuthorsList, getCoursesList } from '../../selectors';
-import { getAllCoursesApi } from '../../services';
+import {
+	selectAuthors,
+	searchCoursesByNameId,
+	selectUser,
+	selectCourses,
+} from '../../selectors';
+// import { getAllCoursesApi } from '../../services';
 
 export const Courses = (): JSX.Element => {
-	const coursesList = useSelector(getCoursesList);
-	const authorsList = useSelector(getAuthorsList);
-	console.log('coursesList', coursesList);
+	const authorsList = useSelector(selectAuthors);
+	const coursesList = useSelector(selectCourses);
+
+	console.log('coursesList', authorsList);
 	console.log('authorsList', coursesList);
 	const [searchedCourse, setSearchedCourse] = useState('');
-	const [courses, setCourses] = useState(coursesList);
+	const [courses, setCourses] = useState(coursesList); // TODO
+	// const foundCourses = useSelector(searchCoursesByNameId(searchedCourse));
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		getAllCoursesApi();
-	}, []);
+	const isAdmin = useSelector(selectUser).role === 'admin';
 
 	const handleInputChange = (e: {
 		target: { value: SetStateAction<string> };
@@ -56,10 +60,12 @@ export const Courses = (): JSX.Element => {
 					onChange={handleInputChange}
 					onClick={handleSearch}
 				/>
-				<Button
-					onClick={() => navigate('/courses/add', { replace: true })}
-					buttonText={BUTTONS_TEXTS.addNewCourse}
-				></Button>
+				{isAdmin && (
+					<Button
+						onClick={() => navigate('/courses/add', { replace: true })}
+						buttonText={BUTTONS_TEXTS.addNewCourse}
+					></Button>
+				)}
 			</HorizontalWrapper>
 			{courses?.length ? (
 				courses.map((course: any) => (
@@ -71,6 +77,7 @@ export const Courses = (): JSX.Element => {
 						creationDate={course.creationDate}
 						description={course.description}
 						authors={getCourseAuthorsName(course.authors, authorsList)}
+						isAdmin={isAdmin}
 					/>
 				))
 			) : (

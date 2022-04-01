@@ -1,25 +1,39 @@
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '../../common/Button/Button';
 import { Logo } from './components/Logo/Logo';
-import { BUTTONS_TEXTS, USERNAME } from '../../constants';
+import { BUTTONS_TEXTS } from '../../constants';
+import { selectUser, selectUserName } from '../../selectors';
+import { logoutThunk } from '../../store/user/thunk';
 
 import * as Styled from './Header.styles';
 
-export const Header = () => {
+interface PrivateRouterProps {
+	onLogout: any;
+	isLoggedIn: any;
+}
+
+export const Header: FC<PrivateRouterProps> = ({ onLogout, isLoggedIn }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const userName =
+		useSelector(selectUserName) || localStorage.getItem('username');
+	const token = useSelector(selectUser).token;
 
 	const handleSubmit = () => {
-		localStorage.removeItem('loginToken');
+		dispatch(logoutThunk(token));
+		onLogout();
 		navigate('/login');
 	};
 
 	return (
 		<>
 			<Logo />
-			{localStorage.getItem('loginToken') && (
+			{isLoggedIn && (
 				<Styled.RightSection>
-					<Styled.UserName>{USERNAME}</Styled.UserName>
+					<Styled.UserName>{userName}</Styled.UserName>
 					<Button
 						disabled={false}
 						buttonText={BUTTONS_TEXTS.logOut}

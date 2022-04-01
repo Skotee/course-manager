@@ -12,6 +12,7 @@ interface InputProps {
 	min?: number;
 	minlength?: number;
 	required?: boolean;
+	inputRef?: any;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -24,6 +25,7 @@ export const Input: React.FC<InputProps> = ({
 	min,
 	minlength,
 	required,
+	inputRef,
 }) => {
 	return (
 		<div>
@@ -38,6 +40,7 @@ export const Input: React.FC<InputProps> = ({
 				min={min}
 				minLength={minlength}
 				required={required}
+				ref={inputRef}
 			/>
 		</div>
 	);

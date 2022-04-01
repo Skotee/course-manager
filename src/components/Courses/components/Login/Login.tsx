@@ -1,52 +1,45 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
+import { loginThunk } from '../../../../store/user/thunk';
+import { useAuth } from '../../../../services';
 import { Input } from '../../../../common/Input/Input';
 import { PLACEHOLDERS, LABELS, BUTTONS_TEXTS } from '../../../../constants';
 import * as CommonStyled from '../../../../common/styles';
 
-export const Login = () => {
+interface LoginProps {
+	onLogin: any;
+}
+
+export const Login = ({ onLogin }: LoginProps) => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const navigate = useNavigate();
+	const loginAPI = useAuth('login');
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		try {
-			const loginUser = async () => {
-				const requestOptions = {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ email, password }),
-				};
-				const response = await fetch(
-					'http://localhost:3000/login',
-					requestOptions
-				);
-				const data = await response.json();
-				if (data.successful) {
-					localStorage.setItem('loginToken', data.result);
-					navigate('/courses');
-					return;
-				} else {
-					const errorMessage = `An error has occured: ${data.errors[0]}`;
-					throw new Error(errorMessage);
-				}
-			};
-			loginUser();
-		} catch (error) {
-			console.error('There was an error!', error);
+		console.log('loginUser', { email, password });
+
+		const loginResponse = await loginAPI({ email, password });
+		console.log('the user logged in');
+		if (loginResponse.successful) {
+			const token = loginResponse.result;
+			console.log('login thunk called', token);
+			dispatch(loginThunk(token));
+			onLogin();
+			navigate('/courses');
+		} else {
+			alert(loginResponse.errors);
 		}
 	};
+
 	return (
-		<CommonStyled.Form
-			onSubmit={handleSubmit}
-			action='http://localhost:3001/login'
-			method='post'
-		>
+		<CommonStyled.Form onSubmit={handleSubmit}>
 			<CommonStyled.Title>Login</CommonStyled.Title>
 			<Input
 				type='email'

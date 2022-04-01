@@ -76,7 +76,6 @@ export const Registration = () => {
 			></Input>
 			<CommonStyled.AuthButton
 				type='submit'
-				// onClick={() => console.log('sds')}
 				buttonText={BUTTONS_TEXTS.registration}
 			/>
 			<CommonStyled.AuthInfo>

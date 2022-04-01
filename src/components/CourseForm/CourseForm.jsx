@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
 
 import { Button } from '../../common/Button/Button';
@@ -14,47 +14,67 @@ import {
 	LABELS,
 	PLACEHOLDERS,
 } from '../../constants';
-import { getAuthorsList } from '../../selectors';
-import { addAuthor } from '../../store/authors/actionCreators';
-import { addCourse } from '../../store/courses/actionCreators';
+import { selectUser, selectAuthors, searchCoursesById } from '../../selectors';
+import {
+	courseSavedThunk,
+	courseUpdatedThunk,
+} from '../../store/courses/thunk';
+import { authorSavedThunk } from '../../store/authors/thunk';
 
 import * as Styled from './CourseForm.styles';
 
-export const CourseForm = (): JSX.Element => {
-	const authorsList = useSelector(getAuthorsList);
-	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
-	const [courseAuthors, setCourseAuthors] = useState([] as any[]);
-	const [addAuthorInput, setAddAuthorInput] = useState('');
-	const [duration, setDuration] = useState(0);
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+const mapAuthorsFromId = (allAuthors, authorIds) => {
+	return authorIds.map((id) => allAuthors.find((a) => a.id === id));
+};
 
-	const handleCreateNewAuthor = (e: { preventDefault: () => void }) => {
+export const CourseForm = ({ isUpdate }) => {
+	const authors = useSelector(selectAuthors);
+	const { courseId } = useParams();
+	const user = useSelector(selectUser);
+	const authorsList = useSelector(selectAuthors);
+	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
+	const courseToUpdate = useSelector(searchCoursesById(courseId));
+	const [courseAuthors, setCourseAuthors] = useState(
+		isUpdate ? mapAuthorsFromId(authors, courseToUpdate.authors) : []
+	);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const inputAuthorName = useRef('');
+	const [formData, setFormData] = useState(
+		isUpdate
+			? { ...courseToUpdate }
+			: { title: '', description: '', duration: 0 }
+	);
+	const handleCreateNewAuthor = (e) => {
 		e.preventDefault();
-		const newAuthor = {
-			id: uuidv4(),
-			name: addAuthorInput,
-		};
-		setAvailableAuthors([...availableAuthors, newAuthor]);
-		dispatch(addAuthor(newAuthor));
+		const newAuthorName = inputAuthorName.current.value;
+		if (
+			newAuthorName?.length &&
+			!authors.find((existingAuthor) => newAuthorName === existingAuthor.name)
+		) {
+			dispatch(authorSavedThunk(user.token, newAuthorName));
+		}
 	};
 
-	const handleAddAuthorToNewCourse = (authorID: number, authorName: string) => {
+	const handleAddAuthorToNewCourse = (authorID, authorName) => {
 		const newCourseAuthor = { name: authorName, id: authorID };
 		setAvailableAuthors(
-			availableAuthors.filter(
-				(author: { id: number }) => author.id !== authorID
-			)
+			availableAuthors.filter((author) => author.id !== authorID)
 		);
 		setCourseAuthors([...courseAuthors, newCourseAuthor]);
 	};
 
-	const handleDeleteAuthorFromCourse = (authorID: any, authorName: any) => {
-		const courseAuthorToDelete = { name: authorName, id: authorID };
-		setAvailableAuthors([...availableAuthors, courseAuthorToDelete]);
-		setCourseAuthors(courseAuthors.filter((author) => author.id !== authorID));
+	const handleDeleteAuthorFromCourse = (author) => {
+		// let courseAuthorNames = courseAuthors.map((author) => author.name);
+		// if (!courseAuthorNames.find((authorName) => author.name === authorName)) {
+		// 	setCourseAuthors([...courseAuthors, author]);
+		// }
+		let deleteAuthor = courseAuthors.filter((auth) => auth.id !== author.id);
+		setCourseAuthors(deleteAuthor);
+	};
+
+	const handleInputChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
 	const createNewCourse = () => {
@@ -62,23 +82,46 @@ export const CourseForm = (): JSX.Element => {
 			alert(ALERTS.followInstructions);
 		} else {
 			const newCourse = {
-				id: uuidv4(),
-				title: title,
-				description: description,
+				id: formData.id || uuidv4(),
+				title: formData.title,
+				description: formData.description,
 				creationDate: dateGenerator(),
-				duration: duration,
-				authors: courseAuthors.map((author) => author.id),
+				duration: formData.duration,
+				authors: courseAuthors?.map((author) => author.id),
 			};
-			dispatch(addCourse(newCourse));
-			navigate('/courses', { replace: true });
+			isUpdate
+				? dispatch(
+						courseUpdatedThunk(
+							user.token,
+							courseId,
+							newCourse.title,
+							newCourse.description,
+							Number.parseInt(newCourse.duration),
+							newCourse.authors
+						)
+				  )
+				: dispatch(
+						courseSavedThunk(
+							user.token,
+							newCourse.title,
+							newCourse.description,
+							Number.parseInt(newCourse.duration),
+							newCourse.authors
+						)
+				  );
+			navigate('/courses');
 		}
 	};
 
 	const checkForErrors = () => {
-		if (title === '' || description === '' || duration === 0) {
+		if (
+			formData.title === '' ||
+			formData.description === '' ||
+			formData.duration === 0
+		) {
 			alert(ALERTS.fillInputs);
 			return false;
-		} else if (description.length < 2) {
+		} else if (formData.description.length < 2) {
 			alert(ALERTS.descriptionInfo);
 			return false;
 		} else if (courseAuthors.length === 0) {
@@ -96,13 +139,14 @@ export const CourseForm = (): JSX.Element => {
 							placeholderText={PLACEHOLDERS.enterTitle}
 							labelText={LABELS.title}
 							type='text'
-							onChange={(e: {
-								target: { value: React.SetStateAction<string> };
-							}) => setTitle(e.target.value)}
+							onChange={handleInputChange}
+							value={formData.title}
 							required
 						/>
 						<Button
-							buttonText={BUTTONS_TEXTS.createCourse}
+							buttonText={
+								isUpdate ? 'Update course' : BUTTONS_TEXTS.createCourse
+							}
 							onClick={createNewCourse}
 							type='submit'
 						/>
@@ -112,7 +156,8 @@ export const CourseForm = (): JSX.Element => {
 					<Styled.Textarea
 						id={'textarea'}
 						placeholder={PLACEHOLDERS.enterDescription}
-						onChange={(e) => setDescription(e.target.value)}
+						onChange={handleInputChange}
+						value={formData.description}
 						required
 					/>
 				</div>
@@ -124,17 +169,13 @@ export const CourseForm = (): JSX.Element => {
 						<Input
 							labelText={LABELS.authorName}
 							placeholderText={PLACEHOLDERS.enterAuthorName}
-							value={addAuthorInput}
-							onChange={(e: {
-								target: { value: React.SetStateAction<string> };
-							}) => setAddAuthorInput(e.target.value)}
+							inputRef={inputAuthorName}
 							inputId='search'
 							minlength={2}
 							type='text'
 						/>
 						<br />
 						<Button
-							disabled={!addAuthorInput}
 							buttonText={BUTTONS_TEXTS.createAuthor}
 							onClick={handleCreateNewAuthor}
 						/>
@@ -144,7 +185,7 @@ export const CourseForm = (): JSX.Element => {
 						<ul>
 							{/*  authors list  section */}
 							{availableAuthors.length ? (
-								availableAuthors.map((author: { id: number; name: string }) => {
+								availableAuthors.map((author) => {
 									return (
 										<Styled.ListItem key={author.id}>
 											<Styled.AuthorName>{author.name}</Styled.AuthorName>
@@ -172,31 +213,28 @@ export const CourseForm = (): JSX.Element => {
 							minlength={1}
 							type='number'
 							min={1}
-							onChange={(e: {
-								target: { value: React.SetStateAction<number> };
-							}) => setDuration(e.target.value)}
+							onChange={handleInputChange}
+							value={formData.duration}
 							required
 						/>
 						<br />
 						<br />
 						<Typography>
-							Duration: <b>{pipeDuration(duration)}</b> hours
+							Duration: <b>{pipeDuration(formData.duration)}</b> hours
 						</Typography>
 					</div>
 					<div>
 						{/*  Course authors list section */}
 						<Styled.SectionHeader>{HEADERS.courseAuthors}</Styled.SectionHeader>
 						<ul>
-							{courseAuthors.length ? (
+							{courseAuthors?.length ? (
 								courseAuthors.map((author) => {
 									return (
 										<Styled.ListItem key={author.id}>
 											<Styled.AuthorName>{author.name}</Styled.AuthorName>
 											<Button
 												buttonText={BUTTONS_TEXTS.deleteAuthor}
-												onClick={() =>
-													handleDeleteAuthorFromCourse(author.id, author.name)
-												}
+												onClick={() => handleDeleteAuthorFromCourse(author)}
 											/>
 										</Styled.ListItem>
 									);

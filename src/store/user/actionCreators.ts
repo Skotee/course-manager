@@ -1,16 +1,20 @@
 // Code with actions
 
-import * as actions from './actionTypes';
+import { createAction } from '@reduxjs/toolkit';
+import { userActionTypes } from './actionTypes';
 
-export function LOG_IN(description: any) {
-	return {
-		type: actions.LOG_IN,
-		payload: description,
-	};
-}
+// export function login(description: any) {
+// 	return {
+// 		type: actions.LOG_IN,
+// 		payload: description,
+// 	};
+// }
 
-export function LOG_OUT() {
-	return {
-		type: actions.LOG_OUT,
-	};
-}
+// export function logout() {
+// 	return {
+// 		type: actions.LOG_OUT,
+// 	};
+// }
+
+export const login = createAction(userActionTypes.LOGIN);
+export const logout = createAction(userActionTypes.LOGOUT);

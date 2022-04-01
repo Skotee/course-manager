@@ -17,38 +17,55 @@
 // After logout isAuth property have value false, token, email and name have value as empty string.
 // Clean localStorage
 
-import { LOG_IN, LOG_OUT } from './actionTypes';
+import { createReducer } from '@reduxjs/toolkit';
+import { login, logout } from './actionCreators';
+// import { LOG_IN, LOG_OUT } from './actionTypes';
 
-const userInitalState = {
+const userInitialState = {
 	isAuth: false,
 	name: '',
 	email: '',
 	token: '',
+	role: '',
 };
 
-export default function userReducer(state = userInitalState, action: any) {
-	const { type, payload } = action;
+// export default function userReducer(state = userInitialState, action) {
+// 	const { type, payload } = action;
 
-	switch (type) {
-		case LOG_IN:
+// 	switch (type) {
+// 		case LOG_IN:
+// 			return {
+// 				isAuth: true,
+// 				name: payload.user.name,
+// 				email: payload.user.email,
+// 				token: payload.result,
+// 				role: payload.role,
+// 			};
+// 		case LOG_OUT:
+// 			localStorage.clear();
+// 			return {
+// 				isAuth: false,
+// 				name: '',
+// 				email: '',
+// 				token: '',
+// 				role: '',
+// 			};
+// 		default:
+// 			return state;
+// 	}
+// }
+
+export const userReducer = createReducer(userInitialState, (builder) => {
+	builder
+		.addCase(login, (state, action) => {
 			return {
+				...action.payload,
 				isAuth: true,
-				name: payload.user.name,
-				email: payload.user.email,
-				token: payload.result,
 			};
-		case LOG_OUT:
-			localStorage.clear();
-			return {
-				isAuth: false,
-				name: '',
-				email: '',
-				token: '',
-			};
-		default:
-			return state;
-	}
-}
+		})
+		.addCase(logout, (state) => (state = userInitialState));
+});
+
 // if (action.type === actions.LOG_IN) {
 // 	return {
 // 		isAuth: true,
